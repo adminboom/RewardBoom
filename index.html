@@ -57,15 +57,12 @@
                 <h2 class="text-2xl font-bold text-white italic tracking-wide uppercase leading-none" style="-webkit-text-stroke: 0.5px #3b82f6;">EXCHANGE<br><span class="text-blue-500">REWARD</span></h2>
                 <div class="h-1 w-12 bg-red-600 mt-4 border-2 border-black"></div>
             </div>
-
             <nav class="flex-1 px-4 py-2 space-y-3 overflow-y-auto">
                 <button @click="currentPage = 'timeline'" 
                     :class="currentPage === 'timeline' ? 'sidebar-active text-white' : 'text-yellow-500 hover:bg-white/5 border-2 border-dashed border-yellow-500/20'"
-                    class="w-full flex items-center px-5 py-4 rounded-xl transition-all duration-200 mb-6">
-                    <span class="text-lg mr-3">📅</span>
-                    <div class="text-left font-bold text-sm uppercase italic tracking-widest">Event Schedule</div>
+                    class="w-full flex items-center px-5 py-4 rounded-xl transition-all duration-200 mb-6 font-bold uppercase italic text-sm tracking-widest">
+                    <span class="text-lg mr-3">📅</span>Event Schedule
                 </button>
-
                 <p class="px-5 text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em] mb-2 italic">Data Reports</p>
                 <template x-for="box in rewardData" :key="box.id">
                     <button @click="changeTab(box.id)" 
@@ -78,7 +75,6 @@
                     </button>
                 </template>
             </nav>
-
             <div class="p-6 border-t-2 border-black bg-[#0a0a0a]">
                 <button @click="requestAdminAccess()" class="w-full bg-yellow-400 text-black py-3 rounded-xl border-2 border-black font-bold text-xs shadow-[3px_3px_0px_#000] hover:bg-yellow-300 transition-all uppercase italic">⚙️ Admin Control</button>
             </div>
@@ -90,9 +86,9 @@
                     <div class="w-3 h-3 bg-red-600 border-2 border-black rotate-45"></div>
                     <h1 class="text-lg text-white uppercase tracking-wide" x-text="getPageTitle()"></h1>
                 </div>
-                <div class="flex items-center space-x-4 uppercase font-bold">
-                    <template x-if="currentPage === 'home'"><input type="text" x-model="search" placeholder="SEARCH ITEM..." class="bg-white border-2 border-black rounded-lg px-6 py-2 text-xs text-black w-64 font-bold shadow-[2px_2px_0px_#000]"></template>
-                    <button @click="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-red-500 italic">➜ LOGOUT</button>
+                <div class="flex items-center space-x-4 uppercase font-bold text-xs">
+                    <template x-if="currentPage === 'home'"><input type="text" x-model="search" placeholder="SEARCH ITEM..." class="bg-white border-2 border-black rounded-lg px-6 py-2 text-black w-64 shadow-[2px_2px_0px_#000]"></template>
+                    <button @click="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-red-500 italic">➜ LOGOUT</button>
                 </div>
             </header>
 
@@ -103,16 +99,13 @@
                         <template x-for="(event, index) in timeline" :key="event.name">
                             <div class="relative">
                                 <div class="absolute -left-[38px] top-4 w-10 h-10 bg-black border-4 border-blue-500 rounded-full z-10 flex items-center justify-center text-xs font-bold text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]" x-text="'0'+(index+1)"></div>
-                                <div class="comic-card p-8 border-2 border-black shadow-[8px_8px_0px_#000] bg-[#161b22] hover:translate-y-[-4px] transition-transform duration-300">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <h3 class="text-3xl font-bold text-white italic uppercase tracking-tighter" x-text="event.name"></h3>
-                                        <span :class="event.status === 'Ended' ? 'bg-gray-700 text-gray-400' : 'bg-green-600 text-white shadow-[0_0_10px_rgba(22,163,74,0.5)]'" 
-                                              class="px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border-2 border-black" x-text="event.status"></span>
+                                <div class="comic-card p-8 border-2 border-black shadow-[8px_8px_0px_#000] bg-[#161b22] hover:translate-y-[-4px] transition-transform duration-300 font-bold">
+                                    <div class="flex justify-between items-start mb-4 uppercase italic">
+                                        <h3 class="text-3xl text-white tracking-tighter" x-text="event.name"></h3>
+                                        <span :class="event.status === 'Ended' ? 'bg-gray-700 text-gray-400' : 'bg-green-600 text-white'" 
+                                              class="px-4 py-1 rounded-full text-[10px] border-2 border-black" x-text="event.status"></span>
                                     </div>
-                                    <div class="flex items-center text-yellow-400 font-bold text-lg italic">
-                                        <span class="mr-3">📅</span><span x-text="event.date"></span>
-                                    </div>
-                                    <p class="mt-4 text-gray-500 text-xs font-medium leading-relaxed uppercase tracking-wider">รายละเอียดช่วงเวลาการแลกของรางวัลตามที่กำหนดในกิจกรรม</p>
+                                    <div class="flex items-center text-yellow-400 text-lg italic"><span class="mr-3">📅</span><span x-text="event.date"></span></div>
                                 </div>
                             </div>
                         </template>
@@ -126,47 +119,35 @@
                     <div class="z-10 text-center md:text-left">
                         <h2 class="text-white text-5xl font-bold italic tracking-tight uppercase drop-shadow-[3px_3px_0px_#000]" x-text="getCurrentBox()?.title"></h2>
                         <div class="mt-6 flex items-center space-x-2" x-show="getEventDate(getCurrentBox()?.id)">
-                             <span class="bg-black text-yellow-400 px-4 py-1 rounded-lg border-2 border-black text-xs font-bold italic" x-text="getEventDate(getCurrentBox()?.id)"></span>
+                             <span class="bg-black text-yellow-400 px-4 py-1 rounded-lg border-2 border-black text-xs font-bold italic shadow-[3px_3px_0px_#000]" x-text="getEventDate(getCurrentBox()?.id)"></span>
                         </div>
                     </div>
                     <div class="text-center md:text-right z-10">
                         <span class="text-[10rem] font-bold text-white total-glow tracking-tight block leading-none" x-text="getCurrentBox()?.total.toLocaleString() || 0"></span>
-                        <span class="bg-yellow-400 text-black inline-block font-bold uppercase text-[14px] italic border-2 border-black px-4 py-1 shadow-[3px_3px_0px_#000] mt-4 uppercase">REDEEMS COLLECTED</span>
+                        <span class="bg-yellow-400 text-black inline-block font-bold uppercase text-[14px] italic border-2 border-black px-4 py-1 shadow-[3px_3px_0px_#000] mt-4">REDEEMS COLLECTED</span>
                     </div>
                 </div>
-
-                <div class="comic-card overflow-hidden shadow-[8px_8px_0px_#000] border-black border-2">
-                    <table class="w-full text-left font-bold">
-                        <thead class="bg-blue-600 border-b-2 border-black uppercase text-white italic tracking-wider text-[11px]">
-                            <tr><th class="px-10 py-5">Reward List</th><th class="px-10 py-5 text-center bg-yellow-400 text-black border-l-2 border-black w-44 uppercase font-sans">Collected</th></tr>
-                        </thead>
-                        <tbody class="divide-y-2 divide-black bg-[#161b22]">
-                            <template x-for="item in filteredItems()" :key="item.name + item.sys">
-                                <tr class="hover:bg-white/5 transition-colors font-bold group">
-                                    <td class="px-10 py-6 border-r-2 border-black">
-                                        <div class="text-xl font-bold text-white uppercase italic group-hover:text-blue-400" x-text="item.name"></div>
-                                        <div class="text-[10px] text-yellow-500 font-mono mt-1 opacity-80 uppercase tracking-tighter" x-text="item.sys"></div>
-                                    </td>
-                                    <td class="px-10 py-6 text-center text-5xl font-bold text-white italic drop-shadow-[2px_2px_0px_#000]" x-text="item.count"></td>
-                                </tr>
-                            </template>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="comic-card p-10 shadow-[8px_8px_0px_#000] border-black border-2 bg-[#0a0a0a]">
-                    <h3 class="text-lg font-bold uppercase text-yellow-400 italic mb-8 tracking-widest leading-none font-sans">📊 PERFORMANCE ANALYSIS</h3>
-                    <div style="height: 450px;"><canvas id="itemChart"></canvas></div>
-                </div>
+                <div class="comic-card overflow-hidden shadow-[8px_8px_0px_#000] border-black border-2"><table class="w-full text-left font-bold"><thead class="bg-blue-600 border-b-2 border-black uppercase text-white italic tracking-wider text-[11px]"><tr><th class="px-10 py-5">Reward List</th><th class="px-10 py-5 text-center bg-yellow-400 text-black border-l-2 border-black w-44 uppercase">Collected</th></tr></thead><tbody class="divide-y-2 divide-black bg-[#161b22]"><template x-for="item in filteredItems()" :key="item.name + item.sys"><tr class="hover:bg-white/5 transition-colors font-bold group"><td class="px-10 py-6 border-r-2 border-black"><div class="text-xl font-bold text-white uppercase italic group-hover:text-blue-400" x-text="item.name"></div><div class="text-[10px] text-yellow-500 font-mono mt-1 opacity-80 uppercase tracking-tighter" x-text="item.sys"></div></td><td class="px-10 py-6 text-center text-5xl font-bold text-white italic drop-shadow-[2px_2px_0px_#000]" x-text="item.count"></td></tr></template></tbody></table></div>
+                <div class="comic-card p-10 shadow-[8px_8px_0px_#000] border-black border-2 bg-[#0a0a0a]"><h3 class="text-lg font-bold uppercase text-yellow-400 italic mb-8 tracking-widest leading-none">📊 PERFORMANCE ANALYSIS</h3><div style="height: 450px;"><canvas id="itemChart"></canvas></div></div>
             </section>
 
-            <section x-show="currentPage === 'admin'" class="flex-1 p-8 overflow-y-auto space-y-8" x-cloak>
-                <div class="max-w-4xl mx-auto space-y-8 font-bold">
+            <section x-show="currentPage === 'admin'" class="flex-1 p-8 overflow-y-auto space-y-8 font-bold" x-cloak>
+                <div class="max-w-4xl mx-auto space-y-8">
                     <button @click="currentPage = 'home'" class="text-blue-400 uppercase text-sm hover:underline italic">← Back to Dashboard</button>
-                    <div class="comic-card p-10 border-blue-500 bg-[#161b22] shadow-[8px_8px_0px_#000] border-2 border-black font-bold">
-                        <h3 class="font-bold mb-6 text-blue-400 uppercase text-lg italic tracking-widest font-sans">Database Config</h3>
+                    <div class="comic-card p-10 border-blue-500 bg-[#161b22] shadow-[8px_8px_0px_#000] border-2 border-black">
+                        <h3 class="font-bold mb-6 text-blue-400 uppercase text-lg italic tracking-widest">Database Config</h3>
                         <input type="text" x-model="csvUrl" class="w-full bg-white border-2 border-black rounded-xl px-5 py-4 text-xs font-mono text-black mb-4">
                         <button @click="saveUrl" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-5 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000] uppercase italic text-lg transition-all">Save & Update</button>
+                    </div>
+
+                    <div class="comic-card p-10 border-emerald-500 bg-[#1a1a1a] flex flex-col md:flex-row justify-between items-center shadow-[8px_8px_0px_#000] border-2 border-black font-bold gap-6">
+                        <div class="text-left">
+                            <p class="text-xl font-bold text-emerald-400 mb-1 uppercase italic">Google Sheets Editor</p>
+                            <p class="text-[10px] text-gray-500 font-medium uppercase tracking-widest italic">แก้ไขข้อมูลในชีทส่งงานโดยตรง</p>
+                        </div>
+                        <a href="https://docs.google.com/spreadsheets/d/1fPWt2t4zumgImIgoBWLMyIBO-8YR19eOoCaJzbl3jNw/edit#gid=0" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-10 py-5 rounded-xl border-2 border-black font-bold text-sm uppercase shadow-[4px_4px_0px_#000] transition-all flex items-center gap-2">
+                            <span>🌐 OPEN GOOGLE SHEETS</span>
+                        </a>
                     </div>
                 </div>
             </section>
@@ -206,7 +187,6 @@
                 getEventDate(boxId) {
                     if (!boxId) return null;
                     const index = parseInt(boxId.replace('box','')) - 1;
-                    // คืนค่า null หากหา ID ไม่เจอ เพื่อให้ x-show ทำงาน
                     return this.timeline[index] ? this.timeline[index].date : null;
                 },
 
