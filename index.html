@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>exchangeReward - Event Timeline Edition</title>
+    <title>exchangeReward - Professional Timeline</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,10 +13,11 @@
         .comic-card { background: #111827; border: 3px solid #1e293b; border-radius: 1.5rem; position: relative; overflow: hidden; }
         .comic-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(#ffffff10 1px, transparent 1px); background-size: 10px 10px; pointer-events: none; }
         .total-glow { text-shadow: 3px 3px 0px #ef4444, 6px 6px 0px #000; }
-        .sidebar-active { background: #3b82f6; color: #fff !important; border: 2px solid #000; box-shadow: 3px 3px 0px #000; }
+        .sidebar-active { background: #3b82f6 !important; color: #fff !important; border: 2px solid #000 !important; box-shadow: 4px 4px 0px #000 !important; }
         [x-cloak] { display: none !important; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-thumb { background: #ef4444; border: 2px solid #000; }
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 4px; background: #1e293b; }
     </style>
 </head>
 <body x-data="system()" x-init="checkAuth()">
@@ -51,62 +52,86 @@
     </div>
 
     <div x-show="isLoggedIn" x-cloak class="flex h-screen overflow-hidden">
+        
         <aside class="w-80 bg-[#0a0a0a] border-r-4 border-black flex flex-col z-20">
             <div class="p-8">
                 <h2 class="text-2xl font-bold text-white italic tracking-wide uppercase leading-none" style="-webkit-text-stroke: 0.5px #3b82f6;">EXCHANGE<br><span class="text-blue-500">REWARD</span></h2>
-                <div class="h-1 w-12 bg-red-600 mt-4 border-2 border-black shadow-[2px_2px_0px_#000]"></div>
+                <div class="h-1 w-12 bg-red-600 mt-4 border-2 border-black"></div>
             </div>
 
-            <div class="px-6 mb-4">
-                <div class="bg-gray-900/50 border-2 border-white/5 rounded-xl p-4">
-                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] mb-3 italic">Event Schedule สรุปรอบ</p>
-                    <div class="space-y-3">
-                        <template x-for="event in timeline" :key="event.name">
-                            <div class="flex flex-col border-l-2 border-gray-800 pl-3">
-                                <span class="text-[10px] font-bold text-gray-300" x-text="event.name"></span>
-                                <span class="text-[9px] text-gray-600 font-mono" x-text="event.date"></span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-            
             <nav class="flex-1 px-4 py-2 space-y-3 overflow-y-auto">
+                <button @click="currentPage = 'timeline'" 
+                    :class="currentPage === 'timeline' ? 'sidebar-active text-white' : 'text-yellow-500 hover:bg-white/5 border-2 border-dashed border-yellow-500/20'"
+                    class="w-full flex items-center px-5 py-4 rounded-xl transition-all duration-200 mb-6">
+                    <span class="text-lg mr-3">📅</span>
+                    <div class="text-left font-bold text-sm uppercase italic tracking-widest">Event Schedule</div>
+                </button>
+
+                <p class="px-5 text-[10px] font-bold text-gray-600 uppercase tracking-[0.2em] mb-2 italic">Data Reports</p>
                 <template x-for="box in rewardData" :key="box.id">
                     <button @click="changeTab(box.id)" 
-                        :class="activeTab === box.id ? 'sidebar-active' : 'text-gray-500 hover:text-white'"
-                        class="w-full flex flex-col px-5 py-4 text-sm rounded-lg transition-all duration-200 group">
+                        :class="(activeTab === box.id && currentPage === 'home') ? 'sidebar-active' : 'text-gray-500 hover:text-white bg-white/5'"
+                        class="w-full flex flex-col px-5 py-4 text-sm rounded-lg transition-all duration-200 group border-2 border-transparent">
                         <div class="flex justify-between w-full mb-1">
                             <span class="text-[10px] font-bold opacity-60 uppercase" x-text="box.id"></span>
-                            <span class="text-[9px] font-bold px-2 bg-black/40 rounded italic" x-text="box.total + ' แลก'"></span>
                         </div>
                         <div class="text-left truncate w-full font-bold text-base uppercase italic tracking-tight" x-text="box.title"></div>
                     </button>
                 </template>
             </nav>
-            <div class="p-6 border-t-2 border-black">
+
+            <div class="p-6 border-t-2 border-black bg-[#0a0a0a]">
                 <button @click="requestAdminAccess()" class="w-full bg-yellow-400 text-black py-3 rounded-xl border-2 border-black font-bold text-xs shadow-[3px_3px_0px_#000] hover:bg-yellow-300 transition-all uppercase italic">⚙️ Admin Control</button>
             </div>
         </aside>
 
         <main class="flex-1 flex flex-col bg-[#050505]">
-            <header class="bg-[#111827] px-8 py-5 flex justify-between items-center border-b-4 border-black shadow-xl z-30 font-bold">
-                <div class="flex items-center space-x-3 italic">
+            <header class="bg-[#111827] px-8 py-5 flex justify-between items-center border-b-4 border-black shadow-xl z-30">
+                <div class="flex items-center space-x-3 italic font-bold">
                     <div class="w-3 h-3 bg-red-600 border-2 border-black rotate-45"></div>
-                    <h1 class="text-lg font-bold text-white uppercase tracking-wide" x-text="currentPage === 'admin' ? 'ADMIN SETTINGS' : getCurrentBox()?.title"></h1>
+                    <h1 class="text-lg text-white uppercase tracking-wide" x-text="getPageTitle()"></h1>
                 </div>
                 <div class="flex items-center space-x-4 uppercase font-bold">
                     <template x-if="currentPage === 'home'"><input type="text" x-model="search" placeholder="SEARCH ITEM..." class="bg-white border-2 border-black rounded-lg px-6 py-2 text-xs text-black w-64 font-bold shadow-[2px_2px_0px_#000]"></template>
-                    <button @click="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-red-500">➜ LOGOUT</button>
+                    <button @click="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold border-2 border-black shadow-[2px_2px_0px_#000] hover:bg-red-500 italic">➜ LOGOUT</button>
                 </div>
             </header>
 
-            <section x-show="currentPage === 'home'" class="flex-1 p-8 overflow-y-auto space-y-10 scroll-smooth">
+            <section x-show="currentPage === 'timeline'" class="flex-1 p-8 overflow-y-auto" x-cloak x-transition>
+                <div class="max-w-4xl mx-auto">
+                    <div class="relative pl-12 space-y-10">
+                        <div class="timeline-line"></div>
+                        
+                        <template x-for="(event, index) in timeline" :key="event.name">
+                            <div class="relative">
+                                <div class="absolute -left-[38px] top-4 w-10 h-10 bg-black border-4 border-blue-500 rounded-full z-10 flex items-center justify-center text-xs font-bold text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]" x-text="'0'+(index+1)"></div>
+                                
+                                <div class="comic-card p-8 border-2 border-black shadow-[8px_8px_0px_#000] bg-[#161b22] hover:translate-y-[-4px] transition-transform duration-300">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <h3 class="text-3xl font-bold text-white italic uppercase tracking-tighter" x-text="event.name"></h3>
+                                        <span :class="event.status === 'Ended' ? 'bg-gray-700 text-gray-400' : 'bg-green-600 text-white shadow-[0_0_10px_rgba(22,163,74,0.5)]'" 
+                                              class="px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border-2 border-black" x-text="event.status"></span>
+                                    </div>
+                                    <div class="flex items-center text-yellow-400 font-bold text-lg italic">
+                                        <span class="mr-3">📅</span>
+                                        <span x-text="event.date"></span>
+                                    </div>
+                                    <p class="mt-4 text-gray-500 text-xs font-medium leading-relaxed uppercase tracking-wider">รายละเอียดช่วงเวลาการแลกของรางวัลตามที่กำหนดในกิจกรรม</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </section>
+
+            <section x-show="currentPage === 'home'" class="flex-1 p-8 overflow-y-auto space-y-10">
                 <div class="w-full bg-red-600 rounded-[2rem] p-12 flex flex-col md:flex-row justify-between items-center relative overflow-hidden border-4 border-black shadow-[10px_10px_0px_#000]">
                     <div class="absolute -right-10 -bottom-10 text-[20rem] opacity-20 font-bold italic pointer-events-none uppercase leading-none text-black select-none">DATA</div>
                     <div class="z-10 text-center md:text-left">
                         <h2 class="text-white text-5xl font-bold italic tracking-tight uppercase drop-shadow-[3px_3px_0px_#000]" x-text="getCurrentBox()?.title"></h2>
-                        <p class="text-[11px] text-yellow-300 font-bold mt-4 uppercase tracking-[0.3em] bg-black/20 inline-block px-4 py-1 rounded-full border border-yellow-400/20" x-text="getEventDate(getCurrentBox()?.id)"></p>
+                        <div class="mt-6 flex items-center space-x-2">
+                             <span class="bg-black text-yellow-400 px-4 py-1 rounded-lg border-2 border-black text-xs font-bold italic" x-text="getEventDate(getCurrentBox()?.id)"></span>
+                        </div>
                     </div>
                     <div class="text-center md:text-right z-10">
                         <span class="text-[10rem] font-bold text-white total-glow tracking-tight block leading-none" x-text="getCurrentBox()?.total.toLocaleString() || 0"></span>
@@ -117,7 +142,7 @@
                 <div class="comic-card overflow-hidden shadow-[8px_8px_0px_#000] border-black border-2">
                     <table class="w-full text-left font-bold">
                         <thead class="bg-blue-600 border-b-2 border-black uppercase text-white italic tracking-wider text-[11px]">
-                            <tr><th class="px-10 py-5">Reward List</th><th class="px-10 py-5 text-center bg-yellow-400 text-black border-l-2 border-black w-44 uppercase">Collected</th></tr>
+                            <tr><th class="px-10 py-5">Reward List</th><th class="px-10 py-5 text-center bg-yellow-400 text-black border-l-2 border-black w-44 uppercase font-sans">Collected</th></tr>
                         </thead>
                         <tbody class="divide-y-2 divide-black bg-[#161b22]">
                             <template x-for="item in filteredItems()" :key="item.name + item.sys">
@@ -134,16 +159,16 @@
                 </div>
 
                 <div class="comic-card p-10 shadow-[8px_8px_0px_#000] border-black border-2 bg-[#0a0a0a]">
-                    <h3 class="text-lg font-bold uppercase text-yellow-400 italic mb-8 tracking-widest leading-none">📊 PERFORMANCE ANALYSIS</h3>
+                    <h3 class="text-lg font-bold uppercase text-yellow-400 italic mb-8 tracking-widest leading-none font-sans">📊 PERFORMANCE ANALYSIS</h3>
                     <div style="height: 450px;"><canvas id="itemChart"></canvas></div>
                 </div>
             </section>
 
             <section x-show="currentPage === 'admin'" class="flex-1 p-8 overflow-y-auto space-y-8" x-cloak>
-                <div class="max-w-4xl mx-auto space-y-8">
-                    <button @click="currentPage = 'home'" class="text-blue-400 font-bold uppercase text-sm hover:underline italic">← Back to Dashboard</button>
+                <div class="max-w-4xl mx-auto space-y-8 font-bold">
+                    <button @click="currentPage = 'home'" class="text-blue-400 uppercase text-sm hover:underline italic">← Back to Dashboard</button>
                     <div class="comic-card p-10 border-blue-500 bg-[#161b22] shadow-[8px_8px_0px_#000] border-2 border-black font-bold">
-                        <h3 class="font-bold mb-6 text-blue-400 uppercase text-lg italic tracking-widest">Database Config</h3>
+                        <h3 class="font-bold mb-6 text-blue-400 uppercase text-lg italic tracking-widest font-sans">Database Config</h3>
                         <input type="text" x-model="csvUrl" class="w-full bg-white border-2 border-black rounded-xl px-5 py-4 text-xs font-mono text-black mb-4">
                         <button @click="saveUrl" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-5 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000] uppercase italic text-lg transition-all">Save & Update</button>
                     </div>
@@ -157,7 +182,7 @@
             return {
                 isLoggedIn: false,
                 showAdminAuth: false,
-                currentPage: 'home',
+                currentPage: 'timeline', // เริ่มต้นที่หน้า Schedule เพื่อความดูง่าย
                 activeTab: '',
                 search: '',
                 userInput: '',
@@ -170,16 +195,22 @@
                 csvUrl: localStorage.getItem('rewardCsvUrl') || 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRFrdwnCKV_cB0AECX2p47917IPmwoamAqO5ubOz9wbyXMOLA5eiGnKVSIXrW5zEg0PLzMH5903mXtO/pub?gid=0&single=true&output=csv',
                 chartInstance: null,
 
-                // ข้อมูล Timeline ที่ให้มา
                 timeline: [
-                    { id: 'box1', name: 'Powerpufffly 1', date: '3 ต.ค. - 7 พ.ย. 2025' },
-                    { id: 'box2', name: 'Powerpufffly 2', date: '1 ธ.ค. 2025 - 18 ม.ค. 2026' },
-                    { id: 'box3', name: 'Powerpufffly 3', date: '5 - 8 ก.พ. 2026' }
+                    { name: 'Powerpufffly 1', date: '3 ตุลาคม 2025 - 7 พฤศจิกายน 2025', status: 'Ended' },
+                    { name: 'Powerpufffly 2', date: '1 ธันวาคม 2025 - 18 มกราคม 2026', status: 'Ended' },
+                    { name: 'Powerpufffly 3', date: '5 - 8 กุมภาพันธ์ 2026', status: 'Active' }
                 ],
 
+                getPageTitle() {
+                    if (this.currentPage === 'timeline') return 'EVENT SCHEDULE';
+                    if (this.currentPage === 'admin') return 'ADMIN CONFIG';
+                    return this.getCurrentBox()?.title || 'DASHBOARD';
+                },
+
                 getEventDate(boxId) {
-                    const event = this.timeline.find(t => t.id === boxId);
-                    return event ? event.date : 'Unknown Date';
+                    // Match box IDs (box1, box2, box3) to timeline array
+                    const index = parseInt(boxId.replace('box','')) - 1;
+                    return this.timeline[index] ? this.timeline[index].date : 'N/A';
                 },
 
                 checkAuth() { if (sessionStorage.getItem('exchangeAuth') === 'true') { this.isLoggedIn = true; this.fetchData(); } },
@@ -195,7 +226,7 @@
                     else { alert('รหัสผ่านแอดมินไม่ถูกต้อง!'); }
                     this.adminPassInput = '';
                 },
-                logout() { this.isLoggedIn = false; sessionStorage.removeItem('exchangeAuth'); this.currentPage = 'home'; },
+                logout() { this.isLoggedIn = false; sessionStorage.removeItem('exchangeAuth'); this.currentPage = 'timeline'; },
                 saveUrl() { localStorage.setItem('rewardCsvUrl', this.csvUrl); location.reload(); },
                 async fetchData() {
                     try {
@@ -260,4 +291,3 @@
     </script>
 </body>
 </html>
-
